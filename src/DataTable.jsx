@@ -119,16 +119,18 @@ const DataTable = () => {
           />
           {errors.name && <span className="error-text">{errors.name}</span>}
           <select
-            className="gender-field"
             name="gender"
+            className="gender-field"
             value={formData.gender}
             onChange={handleInputChange}
           >
             <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </select>
-          {errors.gender && <span className="error-text">{errors.gender}</span>}
+          {errors.gender && (
+            <span className="error-text">{errors.gender}</span>
+          )}
           <input
             type="number"
             className="age-field"
@@ -138,109 +140,134 @@ const DataTable = () => {
             onChange={handleInputChange}
           />
           {errors.age && <span className="error-text">{errors.age}</span>}
+          <button className="add" onClick={handleAddClick}>
+            Add
+          </button>
         </div>
-        <button className="add" onClick={handleAddClick}>
-          ADD
-        </button>
-      </div>
-
-      <div className="search-table-container">
         <input
-          className="search-input"
           type="text"
-          placeholder="Search by name"
-          value={searchTerm}
+          className="search-input"
+          placeholder="Search by name..."
           onChange={handleSearch}
         />
-        <table ref={outsideClick}>
+      </div>
+
+      {data.length === 0 ? (
+        <div className="no-data">NO DATA FOUND</div>
+      ) : (
+        <table>
           <thead>
             <tr>
               <th>Name</th>
               <th>Gender</th>
               <th>Age</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td
-                  id={item.id}
-                  contentEditable={editId === item.id}
-                  onBlur={(e) =>
-                    handleEdit(item.id, { name: e.target.innerText })
-                  }
-                >
-                  {item.name}
-                </td>
-                <td
-                  id={item.id}
-                  contentEditable={editId === item.id}
-                  onBlur={(e) =>
-                    handleEdit(item.id, { gender: e.target.innerText })
-                  }
-                >
-                  {item.gender}
-                </td>
-                <td
-                  id={item.id}
-                  contentEditable={editId === item.id}
-                  onBlur={(e) =>
-                    handleEdit(item.id, { age: parseInt(e.target.innerText) })
-                  }
-                >
-                  {item.age}
-                </td>
-                <td className="actions">
-                  <button
-                    className="edit"
-                    onClick={() => {
-                      setEditId(item.id);
-                    }}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    className="delete"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+            {filteredData.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="no-data">NO DATA FOUND</td>
               </tr>
-            ))}
+            ) : (
+              filteredData.map((item) => (
+                <tr key={item.id} ref={outsideClick}>
+                  {editId === item.id ? (
+                    <>
+                      <td>
+                        <input
+                          type="text"
+                          value={item.name}
+                          onChange={(e) =>
+                            handleEdit(item.id, { name: e.target.value })
+                          }
+                          id={item.id} // Added for focusing
+                        />
+                      </td>
+                      <td>
+                        <select
+                          value={item.gender}
+                          onChange={(e) =>
+                            handleEdit(item.id, { gender: e.target.value })
+                          }
+                        >
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={item.age}
+                          onChange={(e) =>
+                            handleEdit(item.id, { age: e.target.value })
+                          }
+                        />
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => setEditId(false)}
+                          className="edit"
+                        >
+                          Save
+                        </button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{item.name}</td>
+                      <td>{item.gender}</td>
+                      <td>{item.age}</td>
+                      <td className="actions">
+                        <button
+                          onClick={() => setEditId(item.id)}
+                          className="edit"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="delete"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-        <div className="pagination">
-          {Array.from(
-            { length: Math.ceil(filteredItems.length / itemsPerPage) },
-            (_, index) => (
-              <button
-                key={index + 1}
-                style={{
-                  backgroundColor: currentPage === index + 1 && "lightgreen",
-                }}
-                onClick={() => paginate(index + 1)}
-              >
-                {index + 1}
-              </button>
-            )
-          )}
-        </div>
+      )}
+
+      <div className="pagination">
+        {[...Array(Math.ceil(filteredItems.length / itemsPerPage)).keys()].map(
+          (number) => (
+            <button
+              key={number + 1}
+              className={currentPage === number + 1 ? "active" : ""}
+              onClick={() => paginate(number + 1)}
+            >
+              {number + 1}
+            </button>
+          )
+        )}
       </div>
 
-      <div className="download-container">
-        <CsvDownloader
-          datas={data}
-          text="Download CSV"
-          filename={'userdata_' + new Date().toLocaleString()}
-          extension=".csv"
-          className="btn btn-success"
-        />
-      </div>
+      <CsvDownloader
+        datas={data}
+        text="Download CSV"
+        type="csv"
+        className="btn-success"
+      />
     </div>
   );
 };
 
 export default DataTable;
+
+
+
+
+
