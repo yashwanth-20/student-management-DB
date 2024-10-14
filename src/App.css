@@ -1,9 +1,7 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
 
-
 body {
-  background-color:#a4feff ;
+  background-color: #a4feff;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -11,11 +9,9 @@ h1, h2, h3, h4, h5, h6, p, button {
   font-family: 'Open Sans', sans-serif;
 }
 
-
 .App {
   text-align: center;
 }
-
 
 .container {
   max-width: 800px;
@@ -27,11 +23,9 @@ h1, h2, h3, h4, h5, h6, p, button {
   gap: 10px;
 }
 
-
 h1 {
-  color: #333; 
+  color: #333;
 }
-
 
 .add-container {
   display: flex;
@@ -50,19 +44,18 @@ h1 {
 
 /* Input Fields Styles */
 .name-field, .gender-field, .age-field {
-  background-color: #e3e3e3; 
-  border: 1px solid #007BFF; 
-  color: #333; 
+  background-color: #e3e3e3;
+  border: 1px solid #007BFF;
+  color: #333;
   padding: 8px;
   border-radius: 4px;
-  width: 100%; 
-  box-sizing: border-box; 
-  margin-bottom: 12px; 
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
 }
 
-
 .add {
-  background-color: #007bff; 
+  background-color: #007bff;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -73,11 +66,10 @@ h1 {
 
 /* Search Input Styles */
 .search-input {
-  
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 100%; 
+  width: 100%;
   margin-bottom: 20px;
 }
 
@@ -87,27 +79,34 @@ table {
   border-collapse: collapse;
   margin-bottom: 20px;
   font-family: 'Open Sans', sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 thead {
-  background-color: #9b7979; /* Darker green for header */
+  background-color: #007BFF; /* Blue for header */
   color: white;
   font-weight: 600;
 }
 
 table th, table td {
-  border: 1px solid #9b7979;
-  padding: 8px;
+  border: 1px solid #007BFF;
+  padding: 10px;
   text-align: left;
   color: #333; /* Text color for table */
 }
 
 table td {
-  font-size: 18px;
+  font-size: 16px; /* Adjusted for better readability */
   font-weight: 400;
 }
 
-
+/* No Data Placeholder Styles */
+.no-data {
+  text-align: center;
+  color: #888; /* Grey color for no data */
+  font-size: 18px; /* Increased font size for emphasis */
+  padding: 20px;
+}
 
 /* Action Button Styles */
 .actions {
@@ -120,26 +119,26 @@ table td {
   background-color: blue;
   color: #fff;
   text-transform: uppercase;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
 }
 
 .delete {
   background-color: red;
   color: #fff;
   text-transform: uppercase;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
 }
-
 
 .pagination {
   display: flex;
   justify-content: center;
   gap: 5px;
   margin-top: 20px;
-
 }
-
-
-
-
 
 .pagination button.active {
   background-color: green; /* Active button color */
@@ -207,3 +206,6 @@ table td {
     font-size: 14px;
   }
 }
+
+
+
