@@ -1,4 +1,4 @@
-import DataTable from "./dataTable";
+import DataTable from "./DataTable";
 import "./App.css";
 
 export default function App() {
