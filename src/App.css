@@ -1,28 +1,44 @@
-@import url("https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@300;400;600&display=swap");
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+
 
 body {
-  font-family: "Playpen Sans", cursive;
-  background-color: #2f2b2b;
-  color: #fff;
+  background-color:#a4feff ;
+  font-family: 'Open Sans', sans-serif;
 }
+
+h1, h2, h3, h4, h5, h6, p, button {
+  font-family: 'Open Sans', sans-serif;
+}
+
 
 .App {
   text-align: center;
 }
 
+
 .container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5px;
   gap: 10px;
 }
+
+
+h1 {
+  color: #333; 
+}
+
 
 .add-container {
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 5px;
+  margin-bottom: 20px;
 }
 
 .info-container {
@@ -32,71 +48,58 @@ body {
   gap: 5px;
 }
 
+/* Input Fields Styles */
+.name-field, .gender-field, .age-field {
+  background-color: #e3e3e3; 
+  border: 1px solid #007BFF; 
+  color: #333; 
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%; 
+  box-sizing: border-box; 
+  margin-bottom: 12px; 
+}
+
+
 .add {
-  background-color: #73addf;
-  color: #fff;
-  font-weight: 600;
-}
-
-input[type="text"],
-button {
-  appearance: none;
-  outline: none;
-  border: 0;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border-radius: 5px;
-  font-family: "Playpen Sans", cursive;
-}
-
-button {
-  font-weight: 600;
+  background-color: #007bff; 
+  color: white;
+  border: none;
   padding: 10px 15px;
+  border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-}
-
-.edit {
-  background-color: #73addf;
-  color: #fff;
-  text-transform: uppercase;
-}
-
-.delete {
-  background-color: lightcoral;
-  color: #fff;
-  text-transform: uppercase;
-}
-
-.search-table-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
+/* Search Input Styles */
 .search-input {
-  width: 200px;
+  
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%; 
+  margin-bottom: 20px;
 }
 
+/* Table Styles */
 table {
-  font-family: "Playpen Sans", cursive;
+  width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
+  font-family: 'Open Sans', sans-serif;
 }
 
-table td,
-table th {
-  border: 1px solid #ddd;
+thead {
+  background-color: #9b7979; /* Darker green for header */
+  color: white;
+  font-weight: 600;
+}
+
+table th, table td {
+  border: 1px solid #9b7979;
   padding: 8px;
-  max-width: 350px;
-  word-wrap: break-word;
   text-align: left;
-  color: #fff;
+  color: #333; /* Text color for table */
 }
 
 table td {
@@ -104,36 +107,90 @@ table td {
   font-weight: 400;
 }
 
-table tr:hover {
-  background-color: #3f3c3c;
+
+
+/* Action Button Styles */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
 }
 
-tr th {
-  min-width: 100px;
+.edit {
+  background-color: blue;
+  color: #fff;
+  text-transform: uppercase;
 }
 
-table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04aa6d;
-  color: white;
-  font-weight: 600;
+.delete {
+  background-color: red;
+  color: #fff;
+  text-transform: uppercase;
 }
+
 
 .pagination {
   display: flex;
-  gap: 5px;
   justify-content: center;
+  gap: 5px;
+  margin-top: 20px;
+
 }
 
+
+
+
+
+.pagination button.active {
+  background-color: green; /* Active button color */
+}
+
+/* Download Button Styles */
+.btn-success {
+  background-color: #007bff; /* Bootstrap blue */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Error Message Styles */
+.error-text {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 5px;
+}
+
+/* Responsive Styles */
 @media only screen and (max-width: 600px) {
-  tr th {
-    min-width: unset;
+  .info-container {
+    flex-direction: column;
+    gap: 5px;
   }
 
-  table td {
-    font-size: 14px;
+  .add-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  table, .actions {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .add, .pagination button, .download-container .btn-success {
+    width: 100%;
+    max-width: 200px;
   }
 
   .actions {
@@ -143,5 +200,10 @@ table th {
 
   button {
     margin: 3px 0;
+  }
+
+  table td, table th {
+    text-align: center;
+    font-size: 14px;
   }
 }
