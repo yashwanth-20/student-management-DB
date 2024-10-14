@@ -14,18 +14,15 @@ const DataTable = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // Filter items based on search term
   let filteredItems = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const filteredData = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Reset current page on search term change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  // Focus on the edited item
   useEffect(() => {
     if (!editId) return;
 
@@ -33,7 +30,6 @@ const DataTable = () => {
     selectedItem[0].focus();
   }, [editId]);
 
-  // Handle click outside to stop editing
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -62,10 +58,23 @@ const DataTable = () => {
 
   const validateForm = () => {
     let formErrors = {};
-    if (!formData.name.trim()) formErrors.name = "Name is required";
-    if (!formData.gender.trim()) formErrors.gender = "Gender is required";
-    if (!formData.age || isNaN(formData.age) || formData.age <= 0)
-      formErrors.age = "Valid age is required";
+    const nameLengthLimit = 10;
+    const maxAge = 100;
+
+    if (!formData.name.trim()) {
+      formErrors.name = "Name is required";
+    } else if (formData.name.length > nameLengthLimit) {
+      formErrors.name = `Name must not exceed ${nameLengthLimit} characters`;
+    }
+
+    if (!formData.gender.trim()) {
+      formErrors.gender = "Gender is required";
+    }
+
+    if (!formData.age || isNaN(formData.age) || formData.age <= 0 || formData.age > maxAge) {
+      formErrors.age = `Age must be a valid number between 1 and ${maxAge}`;
+    }
+
     return formErrors;
   };
 
@@ -119,18 +128,16 @@ const DataTable = () => {
           />
           {errors.name && <span className="error-text">{errors.name}</span>}
           <select
-            name="gender"
             className="gender-field"
+            name="gender"
             value={formData.gender}
             onChange={handleInputChange}
           >
             <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
-          {errors.gender && (
-            <span className="error-text">{errors.gender}</span>
-          )}
+          {errors.gender && <span className="error-text">{errors.gender}</span>}
           <input
             type="number"
             className="age-field"
@@ -140,132 +147,121 @@ const DataTable = () => {
             onChange={handleInputChange}
           />
           {errors.age && <span className="error-text">{errors.age}</span>}
-          <button className="add" onClick={handleAddClick}>
-            Add
-          </button>
         </div>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search by name..."
-          onChange={handleSearch}
-        />
+        <button className="add" onClick={handleAddClick}>
+          ADD
+        </button>
       </div>
 
-      {data.length === 0 ? (
-        <div className="no-data">NO DATA FOUND</div>
-      ) : (
-        <table>
+      <div className="search-table-container">
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <table ref={outsideClick}>
           <thead>
             <tr>
               <th>Name</th>
               <th>Gender</th>
               <th>Age</th>
-              <th>Actions</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="no-data">NO DATA FOUND</td>
-              </tr>
-            ) : (
+            {filteredData.length > 0 ? (
               filteredData.map((item) => (
-                <tr key={item.id} ref={outsideClick}>
-                  {editId === item.id ? (
-                    <>
-                      <td>
-                        <input
-                          type="text"
-                          value={item.name}
-                          onChange={(e) =>
-                            handleEdit(item.id, { name: e.target.value })
-                          }
-                          id={item.id} // Added for focusing
-                        />
-                      </td>
-                      <td>
-                        <select
-                          value={item.gender}
-                          onChange={(e) =>
-                            handleEdit(item.id, { gender: e.target.value })
-                          }
-                        >
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                        </select>
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          value={item.age}
-                          onChange={(e) =>
-                            handleEdit(item.id, { age: e.target.value })
-                          }
-                        />
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => setEditId(false)}
-                          className="edit"
-                        >
-                          Save
-                        </button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td>{item.name}</td>
-                      <td>{item.gender}</td>
-                      <td>{item.age}</td>
-                      <td className="actions">
-                        <button
-                          onClick={() => setEditId(item.id)}
-                          className="edit"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="delete"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </>
-                  )}
+                <tr key={item.id}>
+                  <td
+                    id={item.id}
+                    contentEditable={editId === item.id}
+                    onBlur={(e) =>
+                      handleEdit(item.id, { name: e.target.innerText })
+                    }
+                  >
+                    {item.name}
+                  </td>
+                  <td
+                    id={item.id}
+                    contentEditable={editId === item.id}
+                    onBlur={(e) =>
+                      handleEdit(item.id, { gender: e.target.innerText })
+                    }
+                  >
+                    {item.gender}
+                  </td>
+                  <td
+                    id={item.id}
+                    contentEditable={editId === item.id}
+                    onBlur={(e) =>
+                      handleEdit(item.id, { age: parseInt(e.target.innerText) })
+                    }
+                  >
+                    {item.age}
+                  </td>
+                  <td className="actions">
+                    <button
+                      className="edit"
+                      onClick={() => {
+                        setEditId(item.id);
+                      }}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="delete"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))
+            ) : (
+              <tr>
+                <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                  NO DATA FOUND
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
-      )}
-
-      <div className="pagination">
-        {[...Array(Math.ceil(filteredItems.length / itemsPerPage)).keys()].map(
-          (number) => (
-            <button
-              key={number + 1}
-              className={currentPage === number + 1 ? "active" : ""}
-              onClick={() => paginate(number + 1)}
-            >
-              {number + 1}
-            </button>
-          )
-        )}
+        <div className="pagination">
+          {Array.from(
+            { length: Math.ceil(filteredItems.length / itemsPerPage) },
+            (_, index) => (
+              <button
+                key={index + 1}
+                style={{
+                  backgroundColor: currentPage === index + 1 && "lightgreen",
+                }}
+                onClick={() => paginate(index + 1)}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
+        </div>
       </div>
 
-      <CsvDownloader
-        datas={data}
-        text="Download CSV"
-        type="csv"
-        className="btn-success"
-      />
+      <div className="download-container">
+        <CsvDownloader
+          datas={data}
+          text="Download CSV"
+          filename={'userdata_' + new Date().toLocaleString()}
+          extension=".csv"
+          className="btn btn-success"
+        />
+      </div>
     </div>
   );
 };
 
 export default DataTable;
+
 
 
 
