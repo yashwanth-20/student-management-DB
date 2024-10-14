@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import CsvDownloader from 'react-csv-downloader';
+import './App.css'; // Ensure you import your CSS file
 
 const DataTable = () => {
   const [data, setData] = useState([]);
@@ -7,19 +8,24 @@ const DataTable = () => {
   const [formData, setFormData] = useState({ name: "", gender: "", age: "" });
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [errors, setErrors] = useState({});
   const outsideClick = useRef(false);
-  const itemsPerPage = 5;
+  const itemsPerPage = 3;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  // Filter items based on search term
   let filteredItems = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const filteredData = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
+  // Reset current page on search term change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
 
+  // Focus on the edited item
   useEffect(() => {
     if (!editId) return;
 
@@ -27,6 +33,7 @@ const DataTable = () => {
     selectedItem[0].focus();
   }, [editId]);
 
+  // Handle click outside to stop editing
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -50,10 +57,21 @@ const DataTable = () => {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
+  };
+
+  const validateForm = () => {
+    let formErrors = {};
+    if (!formData.name.trim()) formErrors.name = "Name is required";
+    if (!formData.gender.trim()) formErrors.gender = "Gender is required";
+    if (!formData.age || isNaN(formData.age) || formData.age <= 0)
+      formErrors.age = "Valid age is required";
+    return formErrors;
   };
 
   const handleAddClick = () => {
-    if (formData.name && formData.gender && formData.age) {
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length === 0) {
       const newItem = {
         id: Date.now(),
         name: formData.name,
@@ -62,6 +80,8 @@ const DataTable = () => {
       };
       setData([...data, newItem]);
       setFormData({ name: "", gender: "", age: "" });
+    } else {
+      setErrors(formErrors);
     }
   };
 
@@ -91,37 +111,37 @@ const DataTable = () => {
         <div className="info-container">
           <input
             type="text"
+            className="name-field"
             placeholder="Name"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
           />
-          <input
-            type="text"
-            placeholder="Gender"
+          {errors.name && <span className="error-text">{errors.name}</span>}
+          <select
+            className="gender-field"
             name="gender"
             value={formData.gender}
             onChange={handleInputChange}
-          />
+          >
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          {errors.gender && <span className="error-text">{errors.gender}</span>}
           <input
-            type="text"
+            type="number"
+            className="age-field"
             placeholder="Age"
             name="age"
             value={formData.age}
             onChange={handleInputChange}
           />
+          {errors.age && <span className="error-text">{errors.age}</span>}
         </div>
         <button className="add" onClick={handleAddClick}>
           ADD
         </button>
-
-        <CsvDownloader
-        datas={data}
-        text="Download CSV"
-        filename={'userdata_' + new Date().toLocaleString()}
-        extension=".csv"
-        className="btn btn-success"
-        />
       </div>
 
       <div className="search-table-container">
@@ -208,7 +228,16 @@ const DataTable = () => {
             )
           )}
         </div>
-        
+      </div>
+
+      <div className="download-container">
+        <CsvDownloader
+          datas={data}
+          text="Download CSV"
+          filename={'userdata_' + new Date().toLocaleString()}
+          extension=".csv"
+          className="btn btn-success"
+        />
       </div>
     </div>
   );
